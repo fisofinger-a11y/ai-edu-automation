@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Automation System – EduCenter Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --warm-white: #FAF7F2;
+    --teal: #0D6E6E;
+    --teal-light: #1A9090;
+    --amber: #E8880A;
+    --amber-light: #FFB340;
+    --coral: #E05C3A;
+    --deep: #1A1A2E;
+    --mid: #2D3561;
+    --gray: #8A8D9F;
+    --border: #DDD8CC;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--cream);
+    color: var(--deep);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--deep);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--amber-light);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .logo span { color: #fff; }
+  .header-badge {
+    background: var(--teal);
+    color: #fff;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pulse-dot {
+    width: 7px; height: 7px;
+    background: var(--amber-light);
+    border-radius: 50%;
+    animation: pulse 1.4s infinite;
+  }
+  @keyframes pulse {
+    0%,100%{opacity:1;transform:scale(1)}
+    50%{opacity:.5;transform:scale(1.5)}
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--deep) 0%, var(--mid) 100%);
+    color: #fff;
+    padding: 52px 32px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(232,136,10,.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--amber-light);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .hero h1 em { color: var(--amber-light); font-style: normal; }
+  .hero p { font-size: 13px; color: rgba(255,255,255,.65); line-height: 1.7; max-width: 420px; }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .hero-stat {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+    backdrop-filter: blur(6px);
+  }
+  .hero-stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--amber-light);
+    display: block;
+  }
+  .hero-stat-label {
+    font-size: 10px;
+    color: rgba(255,255,255,.55);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  /* ── SECTION ── */
+  .section { padding: 28px 20px; }
+  .section-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow-container {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 16px;
+    overflow-x: auto;
+  }
+  .flow-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    min-width: 560px;
+  }
+  .flow-node {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  .flow-node-box {
+    background: var(--deep);
+    color: #fff;
+    border-radius: 10px;
+    padding: 12px 8px;
+    width: 100%;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.4;
+    position: relative;
+    z-index: 2;
+  }
+  .flow-node-box.teal { background: var(--teal); }
+  .flow-node-box.amber { background: var(--amber); }
+  .flow-node-box.coral { background: var(--coral); }
+  .flow-node-box.mid { background: var(--mid); }
+  .flow-icon { font-size: 20px; display: block; margin-bottom: 5px; }
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+    color: var(--gray);
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: -20px;
+  }
+
+  .flow-outputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .output-card {
+    background: var(--deep);
+    border-radius: 12px;
+    padding: 14px;
+    color: #fff;
+    border-left: 3px solid var(--amber);
+    animation: slideUp .5s ease both;
+  }
+  .output-card:nth-child(2) { border-left-color: var(--teal-light); animation-delay: .1s; }
+  .output-card:nth-child(3) { border-left-color: var(--coral); animation-delay: .2s; }
+  .output-card:nth-child(4) { border-left-color: #9B59B6; animation-delay: .3s; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .output-card-title {
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1.5px;
+    color: var(--amber-light);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .output-card:nth-child(2) .output-card-title { color: #4DD9AC; }
+  .output-card:nth-child(3) .output-card-title { color: #FF8A70; }
+  .output-card:nth-child(4) .output-card-title { color: #C39BD3; }
+  .output-card p {
+    font-size: 11px;
+    color: rgba(255,255,255,.7);
+    line-height: 1.6;
+  }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; }
+  .tab-btn {
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--gray);
+    white-space: nowrap;
+    transition: all .2s;
+  }
+  .tab-btn.active {
+    background: var(--deep);
+    color: #fff;
+    border-color: var(--deep);
+  }
+
+  /* ── DEMO CARDS ── */
+  .demo-card {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    display: none;
+  }
+  .demo-card.active { display: block; animation: fadeIn .3s ease; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .demo-card-header {
+    background: var(--deep);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .demo-card-header span {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,.6);
+    text-transform: uppercase;
+  }
+  .demo-card-header strong {
+    font-size: 12px;
+    color: var(--amber-light);
+    font-weight: 600;
+  }
+  .demo-body { padding: 16px; }
+
+  .lesson-block {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .lesson-block-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    font-family: 'Space Mono', monospace;
+  }
+  .lesson-block p { font-size: 12px; color: #444; line-height: 1.7; }
+  .lesson-tag {
+    display: inline-block;
+    background: var(--teal);
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-right: 4px;
+    margin-top: 6px;
+  }
+
+  .chat-bubble-bot {
+    background: var(--deep);
+    color: #fff;
+    border-radius: 14px 14px 14px 4px;
+    padding: 11px 14px;
+    font-size: 12px;
+    line-height: 1.7;
+    margin-bottom: 10px;
+    max-width: 90%;
+  }
+  .chat-bubble-user {
+    background: var(--teal);
+    color: #fff;
+    border-radius: 14px 14px 4px 14px;
+    padding: 11px 14px;
+    font-size: 12px;
+    line-height: 1.7;
+    margin-bottom: 10px;
+    max-width: 80%;
+    margin-left: auto;
+  }
+  .chat-label {
+    font-size: 10px;
+    color: var(--gray);
+    margin-bottom: 4px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .report-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .report-row:last-child { border-bottom: none; }
+  .report-row strong { font-weight: 600; color: var(--deep); }
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    margin: 0 12px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--teal);
+    transition: width 1s ease;
+  }
+
+  /* ── LOG ── */
+  .log-container {
+    background: #0F0F1A;
+    border-radius: 14px;
+    padding: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .log-entry {
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    display: flex;
+    gap: 10px;
+    animation: logIn .3s ease both;
+  }
+  @keyframes logIn { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+  .log-time { color: #555; flex-shrink: 0; }
+  .log-type { flex-shrink: 0; width: 60px; }
+  .log-type.info { color: #4DD9AC; }
+  .log-type.warn { color: var(--amber-light); }
+  .log-type.ai { color: #C39BD3; }
+  .log-msg { color: rgba(255,255,255,.7); }
+
+  /* ── METRICS ── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .metric-card {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+  }
+  .metric-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--deep);
+  }
+  .metric-num.green { color: var(--teal); }
+  .metric-num.amber { color: var(--amber); }
+  .metric-label {
+    font-size: 11px;
+    color: var(--gray);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+  .metric-trend {
+    font-size: 10px;
+    color: var(--teal);
+    font-weight: 700;
+    margin-top: 6px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--deep);
+    color: rgba(255,255,255,.4);
+    text-align: center;
+    padding: 20px;
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo"><span>EDU</span>AI · <span>HỆ THỐNG TỰ ĐỘNG HÓA</span></div>
+  <div class="header-badge">
+    <div class="pulse-dot"></div>
+    ĐANG HOẠT ĐỘNG
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-label">AI AUTOMATION PROOF OF CONCEPT</div>
+  <h1>Trung Tâm Đào Tạo<br>Online <em>Tự Động Hóa</em> bởi AI</h1>
+  <p>Soroban · Tư Duy Lập Trình & Scratch · Robotics Lego WeDo — vận hành thông minh với AI Agent</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-num" id="hoursCount">0</span>
+      <div class="hero-stat-label">Giờ tiết kiệm / ngày</div>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num" id="costCount">0%</span>
+      <div class="hero-stat-label">Giảm chi phí nội dung</div>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num" id="taskCount">0</span>
+      <div class="hero-stat-label">Tác vụ AI / ngày</div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOW DIAGRAM -->
+<section class="section">
+  <div class="section-title">Luồng Xử Lý AI</div>
+  <div class="flow-container">
+    <div class="flow-row">
+      <div class="flow-node">
+        <div class="flow-node-box mid">
+          <span class="flow-icon">👤</span>Dữ liệu học sinh
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <div class="flow-node-box teal">
+          <span class="flow-icon">🤖</span>AI Agent xử lý
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <div class="flow-node-box amber">
+          <span class="flow-icon">⚡</span>Phân loại & Route
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <div class="flow-node-box coral">
+          <span class="flow-icon">✅</span>Output tự động
+        </div>
+      </div>
+    </div>
+    <div class="flow-outputs">
+      <div class="output-card">
+        <div class="output-card-title">📚 Giáo án</div>
+        <p>Soạn bài tự động theo cấp độ học sinh, cá nhân hóa từng em</p>
+      </div>
+      <div class="output-card">
+        <div class="output-card-title">💬 Chatbot tư vấn</div>
+        <p>Tự động trả lời phụ huynh 24/7, tư vấn tuyển sinh & học phí</p>
+      </div>
+      <div class="output-card">
+        <div class="output-card-title">📊 Báo cáo học tập</div>
+        <p>Tổng hợp tiến độ hàng tuần, gửi tự động đến phụ huynh</p>
+      </div>
+      <div class="output-card">
+        <div class="output-card-title">📣 Marketing content</div>
+        <p>Tạo bài đăng mạng xã hội, kịch bản video theo từng môn</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO TABS -->
+<section class="section" style="padding-top:0">
+  <div class="section-title">Demo Output Thực Tế</div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('lesson')">📚 Giáo án AI</button>
+    <button class="tab-btn" onclick="switchTab('chat')">💬 Chatbot</button>
+    <button class="tab-btn" onclick="switchTab('report')">📊 Báo cáo</button>
+    <button class="tab-btn" onclick="switchTab('marketing')">📣 Marketing</button>
+  </div>
+
+  <!-- LESSON -->
+  <div class="demo-card active" id="tab-lesson">
+    <div class="demo-card-header">
+      <span>MODULE</span>
+      <strong>SOROBAN · CẤP ĐỘ 3 · HỌC SINH: MINH KHOA</strong>
+    </div>
+    <div class="demo-body">
+      <div class="lesson-block">
+        <div class="lesson-block-title">🎯 Mục tiêu bài học</div>
+        <p>Học sinh thực hiện phép cộng/trừ 4 chữ số trên bàn tính Soroban trong thời gian ≤ 8 giây/phép tính. Luyện phản xạ ngón tay và kỹ năng tư duy nhanh.</p>
+        <span class="lesson-tag">Cấp 3</span>
+        <span class="lesson-tag">30 phút</span>
+        <span class="lesson-tag">Cá nhân hóa</span>
+      </div>
+      <div class="lesson-block">
+        <div class="lesson-block-title">📋 Kế hoạch 30 phút</div>
+        <p><strong>0–5 phút:</strong> Khởi động — ôn lại bài cũ, kiểm tra 10 phép tính cấp 2<br>
+        <strong>5–20 phút:</strong> Bài mới — kỹ thuật "bỏ 5 thêm 1" trong hàng chục<br>
+        <strong>20–28 phút:</strong> Thực hành 15 bài tập theo bộ đề cá nhân hóa<br>
+        <strong>28–30 phút:</strong> Giao bài về nhà, nhận xét tiến độ</p>
+      </div>
+      <div class="lesson-block">
+        <div class="lesson-block-title">⚠️ Lưu ý cá nhân hóa (Minh Khoa)</div>
+        <p>Dựa trên 3 buổi gần nhất: em còn chậm ở hàng chục, nên tăng bài luyện hàng chục 20%. Tốc độ cải thiện 15% so với tuần trước — ghi nhận và khen ngợi.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT -->
+  <div class="demo-card" id="tab-chat">
+    <div class="demo-card-header">
+      <span>CHATBOT</span>
+      <strong>TƯ VẤN TUYỂN SINH · TỰ ĐỘNG 24/7</strong>
+    </div>
+    <div class="demo-body">
+      <div class="chat-label">PHỤ HUYNH</div>
+      <div class="chat-bubble-user">Bé nhà tôi 7 tuổi, chưa biết gì về lập trình, học Scratch có phù hợp không ạ?</div>
+      <div class="chat-label">AI TƯ VẤN</div>
+      <div class="chat-bubble-bot">Chào chị! Bé 7 tuổi hoàn toàn phù hợp để bắt đầu với <strong>Scratch</strong> ạ 🎉<br><br>
+      Scratch được thiết kế đặc biệt cho trẻ 6–12 tuổi, học qua kéo-thả khối lệnh trực quan, không cần gõ code. Sau 3–4 buổi đầu bé đã tự tạo được trò chơi đơn giản.<br><br>
+      Trung tâm có <strong>lớp Starter 7 tuổi</strong> học 2 buổi/tuần, 60 phút/buổi. Chị muốn đăng ký học thử 1 buổi <strong>miễn phí</strong> không ạ?</div>
+      <div class="chat-label">PHỤ HUYNH</div>
+      <div class="chat-bubble-user">Học phí bao nhiêu vậy bạn?</div>
+      <div class="chat-bubble-bot">Học phí khóa Scratch Starter (12 buổi):<br>
+      💰 <strong>1.800.000đ/tháng</strong> — học 2 buổi/tuần<br>
+      🎁 Tháng đầu giảm 20% còn <strong>1.440.000đ</strong><br>
+      📱 Bao gồm: tài liệu, hỗ trợ bài tập online, báo cáo hàng tuần<br><br>
+      Chị để lại SĐT mình sẽ gọi xác nhận lịch học thử ngay nhé! 😊</div>
+    </div>
+  </div>
+
+  <!-- REPORT -->
+  <div class="demo-card" id="tab-report">
+    <div class="demo-card-header">
+      <span>BÁO CÁO TUẦN</span>
+      <strong>THÁNG 4/2025 · TOÀN TRUNG TÂM</strong>
+    </div>
+    <div class="demo-body">
+      <div class="lesson-block">
+        <div class="lesson-block-title">📈 Tiến độ học sinh theo môn</div>
+        <div class="report-row">
+          <strong>Soroban</strong>
+          <div class="progress-bar"><div class="progress-fill" style="width:82%;background:var(--teal)"></div></div>
+          <span style="font-size:12px;font-weight:700;color:var(--teal)">82%</span>
+        </div>
+        <div class="report-row">
+          <strong>Scratch</strong>
+          <div class="progress-bar"><div class="progress-fill" style="width:74%;background:var(--amber)"></div></div>
+          <span style="font-size:12px;font-weight:700;color:var(--amber)">74%</span>
+        </div>
+        <div class="report-row">
+          <strong>Robotics</strong>
+          <div class="progress-bar"><div class="progress-fill" style="width:68%;background:var(--coral)"></div></div>
+          <span style="font-size:12px;font-weight:700;color:var(--coral)">68%</span>
+        </div>
+      </div>
+      <div class="lesson-block">
+        <div class="lesson-block-title">📬 Nội dung gửi phụ huynh (AI tự soạn)</div>
+        <p><em>"Bé Minh Khoa đã hoàn thành 4/4 buổi học tuần này 🌟. Điểm nổi bật: tốc độ tính Soroban tăng 18%, vượt mục tiêu tuần. Bài tập về nhà hoàn thành đúng hạn 3/4 lần. Tuần tới tập trung nâng cấp độ 4. Phụ huynh xem video ghi lại buổi học tại link đính kèm."</em></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARKETING -->
+  <div class="demo-card" id="tab-marketing">
+    <div class="demo-card-header">
+      <span>CONTENT AI</span>
+      <strong>BÀI ĐĂNG MẠNG XÃ HỘI · TỰ ĐỘNG TẠO</strong>
+    </div>
+    <div class="demo-body">
+      <div class="lesson-block">
+        <div class="lesson-block-title">📱 Facebook Post — Soroban</div>
+        <p>🧮 <strong>Con tính nhẩm nhanh hơn máy tính?</strong> Hoàn toàn có thể!<br><br>
+        Học sinh lớp Soroban cấp 3 của chúng tôi đang thực hiện 50 phép tính/phút 🔥 Não bộ trẻ 6–10 tuổi là giai đoạn vàng để luyện tư duy số học.<br><br>
+        👉 Đăng ký học thử <strong>MIỄN PHÍ</strong> — inbox ngay hôm nay!<br>
+        #Soroban #TínhNhẩmNhanh #TrẻThôngMinh</p>
+      </div>
+      <div class="lesson-block">
+        <div class="lesson-block-title">🎬 Kịch bản Reels — Robotics</div>
+        <p><strong>[0–3s]</strong> Cận cảnh robot Lego WeDo di chuyển tự động<br>
+        <strong>[3–8s]</strong> Bé 9 tuổi lập trình điều khiển robot bằng tablet<br>
+        <strong>[8–12s]</strong> Biểu cảm vui mừng khi robot hoàn thành nhiệm vụ<br>
+        <strong>[12–15s]</strong> Text overlay: "Con bạn có thể làm điều này!" + Logo trung tâm</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVITY LOG -->
+<section class="section" style="padding-top:0">
+  <div class="section-title">Activity Log · AI Xử Lý Thực Tế</div>
+  <div class="log-container" id="logContainer">
+    <div class="log-entry" style="animation-delay:.0s">
+      <span class="log-time">09:02</span><span class="log-type ai">AI</span><span class="log-msg">Soạn giáo án Soroban cấp 3 — Minh Khoa · ✓ 0.8s</span>
+    </div>
+    <div class="log-entry" style="animation-delay:.05s">
+      <span class="log-time">09:04</span><span class="log-type info">CHAT</span><span class="log-msg">Phụ huynh hỏi học phí Scratch → Bot trả lời · ✓ 1.2s</span>
+    </div>
+    <div class="log-entry" style="animation-delay:.1s">
+      <span class="log-time">09:11</span><span class="log-type ai">AI</span><span class="log-msg">Tạo bộ 20 bài tập Scratch cấp 2 cá nhân hóa · ✓ 1.5s</span>
+    </div>
+    <div class="log-entry" style="animation-delay:.15s">
+      <span class="log-time">09:30</span><span class="log-type warn">REPORT</span><span class="log-msg">Tổng hợp báo cáo tuần 38 học sinh → gửi email · ✓ 3.1s</span>
+    </div>
+    <div class="log-entry" style="animation-delay:.2s">
+      <span class="log-time">10:15</span><span class="log-type ai">AI</span><span class="log-msg">Soạn kịch bản video Robotics WeDo Bài 5 · ✓ 1.1s</span>
+    </div>
+    <div class="log-entry" style="animation-delay:.25s">
+      <span class="log-time">10:42</span><span class="log-type info">CONTENT</span><span class="log-msg">Tạo 3 bài Facebook post tuần này (Soroban, Scratch, Robot) · ✓ 2.4s</span>
+    </div>
+    <div class="log-entry" style="animation-delay:.3s">
+      <span class="log-time">11:00</span><span class="log-type ai">AI</span><span class="log-msg">Phân tích tiến độ 15 học sinh Soroban · cờ 2 em cần hỗ trợ · ✓ 0.9s</span>
+    </div>
+    <div class="log-entry" style="animation-delay:.35s">
+      <span class="log-time">14:20</span><span class="log-type warn">REPORT</span><span class="log-msg">Gửi nhắc nhở học sinh vắng buổi Robotics hôm nay · ✓ 0.3s</span>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<section class="section" style="padding-top:0">
+  <div class="section-title">Chỉ Số Tác Động</div>
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-num green">5–6h</div>
+      <div class="metric-label">Tiết kiệm mỗi ngày so với làm thủ công</div>
+      <div class="metric-trend">↑ HIỆU SUẤT +340%</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-num amber">70%</div>
+      <div class="metric-label">Giảm chi phí biên soạn tài liệu & content</div>
+      <div class="metric-trend">↓ CHI PHÍ NHÂN SỰ</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-num green">24/7</div>
+      <div class="metric-label">Chatbot tư vấn phụ huynh không ngừng nghỉ</div>
+      <div class="metric-trend">0 NHÂN SỰ TRỰC</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-num amber">3 môn</div>
+      <div class="metric-label">Soroban · Scratch · Robotics được tự động hóa</div>
+      <div class="metric-trend">100% WORKFLOW</div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  BẰNG CHỨNG SỬ DỤNG AI · TRUNG TÂM ĐÀO TẠO ONLINE · HỆ THỐNG TỰ ĐỘNG HÓA TOÀN DIỆN
+</footer>
+
+<script>
+// Animate counters
+function animateCount(el, target, suffix, duration) {
+  let start = 0;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start += step;
+    if (start >= target) { start = target; clearInterval(timer); }
+    el.textContent = Math.floor(start) + suffix;
+  }, 16);
+}
+setTimeout(() => {
+  animateCount(document.getElementById('hoursCount'), 6, 'h', 1200);
+  animateCount(document.getElementById('costCount'), 70, '%', 1400);
+  animateCount(document.getElementById('taskCount'), 48, '', 1600);
+}, 300);
+
+// Tab switching
+function switchTab(id) {
+  document.querySelectorAll('.demo-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Live log simulation
+const logs = [
+  {time:'15:08', type:'ai', msg:'Cập nhật giáo án Scratch theo phản hồi giáo viên · ✓ 0.7s'},
+  {time:'15:22', type:'info', msg:'Phụ huynh hỏi lịch học tháng 5 → Bot phản hồi · ✓ 0.9s'},
+  {time:'15:45', type:'warn', msg:'Tổng hợp token usage hôm nay: 4.2M tokens · ✓'},
+  {time:'16:01', type:'ai', msg:'Soạn đề kiểm tra Robotics WeDo Level 2 · ✓ 1.3s'},
+];
+let li = 0;
+setInterval(() => {
+  if (li >= logs.length) return;
+  const l = logs[li++];
+  const container = document.getElementById('logContainer');
+  const entry = document.createElement('div');
+  entry.className = 'log-entry';
+  entry.innerHTML = `<span class="log-time">${l.time}</span><span class="log-type ${l.type}">${l.type.toUpperCase()}</span><span class="log-msg">${l.msg}</span>`;
+  container.appendChild(entry);
+  container.scrollTop = container.scrollHeight;
+}, 3500);
+</script>
+</body>
+</html>
